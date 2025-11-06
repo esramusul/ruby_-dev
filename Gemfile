@@ -48,3 +48,9 @@ end
 
 gem "rack-cors", "~> 3.0"
 gem "oj", "~> 3.16"
+group :test do
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner-active_record'
+  gem 'rspec-expectations'  # 👈 sadece bunu ekle
+end
+

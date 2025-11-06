@@ -1,0 +1,435 @@
+{
+	"info": {
+		"_postman_id": "8fdc2f5d-258a-459f-8480-d5e389661410",
+		"name": "Users API (Local)",
+		"description": "Postman collection for http://127.0.0.1:3000/api/v1/users. Update authToken, userId, and bodies as needed.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49517562",
+		"_collection_link": "https://musulesra25-4973488.postman.co/workspace/esra-musul~7e06ed1c-9a74-4762-8f6d-59f06a9eef46/collection/49517562-8fdc2f5d-258a-459f-8480-d5e389661410?action=share&source=collection_link&creator=49517562"
+	},
+	"item": [
+		{
+			"name": "List Users",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code 200 dönmeli\r",
+							"pm.test(\"GET /users status 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Test 2: Response body JSON olmalı ve array olmalı\r",
+							"pm.test(\"GET /users body is array\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(Array.isArray(jsonData)).to.be.true;\r",
+							"});\r",
+							"\r",
+							"// Ekstra (opsiyonel, istersen koy):\r",
+							"// En az 1 user dönüyor mu\r",
+							"pm.test(\"Users list is not empty\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.be.above(0);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "testtoken",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:3000/api/v1/users?limit=10&page=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test 1: Status code 201 ya da 200 olmalı (hangi kodu dönüyorsa)\r",
+							"pm.test(\"POST /users created\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+							"});\r",
+							"\r",
+							"// Test 2: Dönen objede forename alanı geldi mi\r",
+							"pm.test(\"Response has forename\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"forename\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ey.fake.jwt.token.for.assignment.only",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user\": {\n    \"forename\": \"Esra\",\n    \"surname\": \"Musul\",\n    \"hashed_password\": \"abc123\",\n    \"credit_balance\": 100,\n    \"role\": \"admin\",\n    \"language\": \"tr-TR\"\n  }\n}\n\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User (PUT)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"PUT /users acceptable status\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204, 404]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"PUT /users valid body when applicable\", function () {\r",
+							"    if ([200, 201].includes(pm.response.code)) {\r",
+							"        pm.response.to.be.withBody;\r",
+							"        pm.response.to.be.json;\r",
+							"        const data = pm.response.json();\r",
+							"        pm.expect(data).to.have.property(\"forename\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"forename\": \"Esra\",\n  \"surname\": \"Musul-Updated\",\n  \"hashed_password\": \"abc123\",\n  \"credit_balance\": 120,\n  \"role\": \"admin\",\n  \"language\": \"tr-TR\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/31",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"31"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partial Update (PATCH)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"PATCH /users acceptable status\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204, 404]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"PATCH /users valid body when applicable\", function () {\r",
+							"    if ([200, 201].includes(pm.response.code)) {\r",
+							"        pm.response.to.be.withBody;\r",
+							"        pm.response.to.be.json;\r",
+							"        const data = pm.response.json();\r",
+							"        pm.expect(data).to.have.property(\"credit_balance\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "ey.fake.jwt.token.for.assignment.only",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"credit_balance\": 250\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/31",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"31"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"DELETE /users acceptable status\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204, 404]);\r",
+							"});\r",
+							"\r",
+							"// Eğer 2xx ise (silme işlemi gerçekleştiyse) gövde JSON olabilir.\r",
+							"// 204 veya 404 durumunda body beklemiyoruz.\r",
+							"pm.test(\"DELETE /users valid body when applicable\", function () {\r",
+							"    if ([200, 202].includes(pm.response.code)) {\r",
+							"        pm.response.to.be.withBody;\r",
+							"        pm.response.to.be.json;\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/v1/users/23",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"23"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "ey.fake.jwt.token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					"pm.test('Status code is 2xx', function () {",
+					"  pm.expect(pm.response.code).to.be.within(200, 299);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:3000"
+		},
+		{
+			"key": "authToken",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": "64f4c0e2b2a5f3a1cdef1234"
+		},
+		{
+			"key": "LAST_USER_ID",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "scale-platform",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:ui": "cypress run --spec 'cypress/e2e/analysis_ui.cy.js'",
+    "cypress:run:flow": "cypress run --spec 'cypress/e2e/analysis_flow.cy.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/esramusul/ruby_-dev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/esramusul/ruby_-dev/issues"
+  },
+  "homepage": "https://github.com/esramusul/ruby_-dev#readme",
+  "dependencies": {
+    "newman": "^4.6.1",
+    "newman-reporter-html": "^1.0.5",
+    "newman-reporter-json": "^1.0.0"
+  },
+  "devDependencies": {
+    "cypress": "^15.5.0"
+  }
+}
